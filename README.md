@@ -40,6 +40,7 @@ src/auto_fix_pr.py # Auto PR generator
 dashboard/app.py # CISO dashboard
 bad-deps/ # 3 malicious packages
 good-deps/ # Secure baseline
+<img width="1470" height="956" alt="Screenshot 2026-02-18 at 10 18 11 AM" src="https://github.com/user-attachments/assets/45ca75f4-5835-47e1-8e69-0b5477893dd8" />
 
 
 
@@ -48,4 +49,7 @@ good-deps/ # Secure baseline
 pip install -r requirements.txt
 streamlit run dashboard/app.py
 python src/supply_chain_ai.py
+
+
+
 
