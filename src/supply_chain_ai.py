@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import sys
+import subprocess
 from pathlib import Path
 
 class SupplyChainAI:
@@ -23,7 +24,8 @@ class SupplyChainAI:
                         'package': dep,
                         'risk_score': self.known_threats[dep]['risk'],
                         'threat': 'MITRE T1195 - Supply Chain Compromise',
-                        'fix': f'Remove {dep} (CVE: {self.known_threats[dep]["cve"]})'
+                        'fix': f'Remove {dep} (CVE: {self.known_threats[dep]["cve"]})',
+                        'path': str(path)
                     })
             return risks
         except:
@@ -40,7 +42,10 @@ class SupplyChainAI:
                 print(f"  ❌ {risk['package']}: Risk {risk['risk_score']:.2f}")
                 print(f"     {risk['threat']}")
                 print(f"     Fix: {risk['fix']}")
-            sys.exit(1)  # FAIL GitHub Action
+            
+            # Save risks for Slack
+            print(f"::notice file=supply_chain_risks.json ::{json.dumps(risks)}")
+            sys.exit(1)
         else:
             print("✅ No supply chain risks detected")
             sys.exit(0)
