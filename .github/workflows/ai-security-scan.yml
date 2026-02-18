@@ -1,0 +1,41 @@
+name: 🚨 AI Supply Chain Security Scan
+on: [push, pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: 🔍 Trivy SCA Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+    
+    - name: 🤖 AI Supply Chain Analysis
+      run: python src/supply_chain_ai.py
+    
+    - name: ✅ Security Summary
+      if: success()
+      run: echo "🎉 All supply chain security checks PASSED!"
